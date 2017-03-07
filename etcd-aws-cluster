@@ -27,18 +27,24 @@ wait_time=3
 if [ -f "$etcd_peers_file_path" ]; then
     echo "$pkg: etcd-peers file $etcd_peers_file_path already created, exiting"
     exit 0
+else
+    echo "using etcd_peers_file_path: $etcd_peers_file_path"
 fi
 
 ec2_instance_id=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 if [[ ! $ec2_instance_id ]]; then
     echo "$pkg: failed to get instance id from instance metadata"
     exit 2
+else
+    echo "ec2_instance_id: $ec2_instance_id"
 fi
 
 ec2_instance_ip=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 if [[ ! $ec2_instance_ip ]]; then
     echo "$pkg: failed to get instance IP address"
     exit 3
+else
+    echo "ec2_instance_ip: $ec2_instance_ip"
 fi
 
 # If we're in proxy mode we don't have to look this up and expect an env var
@@ -48,6 +54,8 @@ if [[ ! $PROXY_ASG ]]; then
     if [[ ! "$asg_name" ]]; then
         echo "$pkg: failed to get the auto scaling group name"
         exit 4
+    else
+        echo "asg_name: $asg_name"
     fi
 else
     etcd_proxy=on
